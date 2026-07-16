@@ -28,10 +28,10 @@ jobs:
           file: ./tests/Dockerfile
           push: false
           load: true
-          tags: moodle-bats-test:${{ github.run_id }}
+          tags: wordpress-bats-test:${{ github.run_id }}
 
       - name: Run BATS tests
-        run: docker run --rm moodle-bats-test:${{ github.run_id }}
+        run: docker run --rm wordpress-bats-test:${{ github.run_id }}
 
   E2E:
     name: Legacy upgrade end-to-end test
@@ -50,17 +50,17 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          tags: moodle-e2e-test:${{ github.run_id }}
+          tags: wordpress-e2e-test:${{ github.run_id }}
 
       - name: Run legacy-install upgrade regression test
-        run: ./tests/e2e-legacy-upgrade.sh moodle-e2e-test:${{ github.run_id }}
+        run: ./tests/e2e-legacy-upgrade.sh wordpress-e2e-test:${{ github.run_id }}
 
   Container:
     name: Build Container Image
     runs-on: ubuntu-latest
     env:
       DOCKERFILE: ./Dockerfile
-      DOCKER_IMAGE_NAME: cloudtooling/moodle
+      DOCKER_IMAGE_NAME: cloudtooling/wordpress
       VERSION_FILE: config.json
     steps:
       - uses: actions/checkout@v7

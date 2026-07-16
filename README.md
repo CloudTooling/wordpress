@@ -2,7 +2,7 @@
 
 Wordpress Docker Image &amp; Helm Chart. Based on Bitnami Charts and Images
 
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/wordpress-ng)](https://artifacthub.io/packages/search?repo=wordpress-ng)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/wordpress-ng)](https://artifacthub.io/packages/helm/wordpress-ng/wordpress)
 [![Docker Stars](https://img.shields.io/docker/pulls/cloudtooling/wordpress)](https://hub.docker.com/r/cloudtooling/wordpress/)
 [![Docker Stars](https://img.shields.io/docker/stars/cloudtooling/wordpress.svg)](https://hub.docker.com/r/cloudtooling/wordpress/)
 
@@ -10,31 +10,41 @@ Wordpress Docker Image &amp; Helm Chart. Based on Bitnami Charts and Images
 
 ### Docker image
 
-For now this chart consumes `cloudtooling/wordpress:6.9.4`, a manually-built image based on
-Bitnami's last free `bitnami/wordpress` release. A proper `Dockerfile` +
-`prebuildfs`/`rootfs` rebuild (rebuilding from Bitnami's still-public stacksmith component
-packages, the same approach used in the [moodle](https://github.com/CloudTooling/moodle)
-fork) is planned but not done yet.
+Published to [Docker Hub](https://hub.docker.com/r/cloudtooling/wordpress/tags) by
+[`.github/workflows/build.yml`](.github/workflows/build.yml): `next` and a numeric
+`<run-id>` tag on every push to `develop`, and `latest` plus the released version (e.g.
+`7.0.0`) whenever a version tag is pushed. Pin to a released version tag in anything other
+than a throwaway environment — `next`/`latest` move.
 
 ```console
-docker pull cloudtooling/wordpress:6.9.4
+docker pull cloudtooling/wordpress:7.0.0
 ```
+
+[`Dockerfile`](Dockerfile) + [`prebuildfs`](prebuildfs)/[`rootfs`](rootfs) rebuild the
+Bitnami WordPress image from Bitnami's own still-public `downloads.bitnami.com/files/stacksmith`
+component packages (Apache, PHP, the various `*-client`/`*-lib` packages, and WordPress
+itself), rather than depending on any `bitnami/*` or `bitnamilegacy/*` image — the same
+approach used in the [moodle](https://github.com/CloudTooling/moodle) fork. `WORDPRESS_VERSION`
+is currently pinned to `7.0.0`, the last version Bitnami built before splitting free/paid
+image support (see [`bitnami/containers`](https://github.com/bitnami/containers)); there is
+no newer open component build to move to yet.
 
 It's a drop-in for `bitnami/wordpress`: same environment variables
 (`WORDPRESS_DATABASE_*`, `WORDPRESS_USERNAME`/`WORDPRESS_PASSWORD`, `SMTP_*`, ...), same
-`/bitnami/wordpress` volume layout.
+`/bitnami/wordpress` volume layout. See [`docker-compose.yml`](docker-compose.yml) for a
+minimal local run against real MariaDB (`docker compose up`).
 
 ### Helm chart
 
 [`charts/wordpress`](charts/wordpress) is a vendored-and-modified fork of Bitnami's official
-`wordpress` Helm chart (last free version pulled via
-`helm pull oci://registry-1.docker.io/bitnamicharts/wordpress --version 30.1.8`), with the
-`image.repository`/`image.tag` defaults pointed at `cloudtooling/wordpress:6.9.4` instead of
-`bitnami/wordpress`. It is not yet published to a chart repository or OCI registry from CI —
-consume it directly from a checkout of this repo until that's wired up:
+`wordpress` Helm chart (currently tracking `helm pull
+oci://registry-1.docker.io/bitnamicharts/wordpress --version 32.1.12` — unlike the component
+image tarballs the Dockerfile pulls, Bitnami keeps publishing chart updates, so this can move
+independently and ahead of `WORDPRESS_VERSION`), with the `image.repository`/`image.tag`
+defaults pointed at `cloudtooling/wordpress:7.0.0` instead of `bitnami/wordpress`:
 
 ```console
-helm install my-release ./charts/wordpress \
+helm install my-release ghcr.io/cloudtooling/helm-charts \
   --set wordpressUsername=admin \
   --set wordpressPassword=<password> \
   --set externalDatabase.host=<mariadb-host> \

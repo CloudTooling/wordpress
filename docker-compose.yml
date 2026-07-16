@@ -1,0 +1,38 @@
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:latest
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_DATABASE=bitnami_wordpress
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cloudtooling/wordpress:0.1.0
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_PASSWORD=bitnami
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'wordpress_data:/bitnami/wordpress'
+    depends_on:
+      - mariadb
+volumes:
+  mariadb_data:
+    driver: local
+  wordpress_data:
+    driver: local

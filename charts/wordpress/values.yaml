@@ -95,7 +95,7 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: cloudtooling/wordpress
-  tag: "6.9.4"
+  tag: "7.0.0"
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -147,6 +147,9 @@ wordpressTablePrefix: wp_
 ## @param wordpressScheme Scheme to use to generate WordPress URLs
 ##
 wordpressScheme: http
+## @param wordpressHost Hostname to use to generate WordPress URLs
+##
+wordpressHost: ""
 ## @param wordpressSkipInstall Skip wizard installation
 ## NOTE: useful if you use an external database that already contains WordPress data
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/wordpress#connect-wordpress-docker-container-to-an-existing-database
