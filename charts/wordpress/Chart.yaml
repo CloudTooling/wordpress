@@ -18,7 +18,7 @@ annotations:
   tanzuCategory: application
 apiVersion: v2
 # renovate: datasource=github-tags depName=WordPress/WordPress
-appVersion: 7.0.2
+appVersion: 7.0.3
 dependencies:
 - condition: memcached.enabled
   name: memcached
