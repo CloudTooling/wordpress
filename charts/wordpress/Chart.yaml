@@ -50,4 +50,4 @@ maintainers:
 name: wordpress
 sources:
 - https://github.com/CloudTooling/wordpress
-version: 1.0.4
+version: 1.0.5
