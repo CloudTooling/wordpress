@@ -4,7 +4,7 @@
 FROM docker.io/bitnami/minideb:bookworm
 
 # renovate: datasource=github-tags depName=WordPress/WordPress
-ARG WORDPRESS_VERSION="7.0.0"
+ARG WORDPRESS_VERSION="6.9"
 ARG DOWNLOADS_URL="downloads.bitnami.com/files/stacksmith"
 ARG TARGETARCH
 ARG BUILD_DATE
