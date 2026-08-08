@@ -4,7 +4,7 @@
 FROM docker.io/bitnami/minideb:bookworm
 
 # renovate: datasource=github-tags depName=WordPress/WordPress
-ARG WORDPRESS_VERSION="7.0.0"
+ARG WORDPRESS_VERSION="7.0.3"
 ARG DOWNLOADS_URL="downloads.bitnami.com/files/stacksmith"
 ARG TARGETARCH
 ARG BUILD_DATE
@@ -36,7 +36,7 @@ RUN --mount=type=secret,id=downloads_url,env=SECRET_DOWNLOADS_URL \
       "mysql-client-12.3.2-1-linux-${OS_ARCH}-debian-12" \
       "postgresql-lib-18.4.0-0-linux-${OS_ARCH}-debian-12" \
       "libphp-8.4.22-1-linux-${OS_ARCH}-debian-12" \
-      "wordpress-${WORDPRESS_VERSION}-1-linux-${OS_ARCH}-debian-12" \
+      "wordpress-${WORDPRESS_VERSION}-0-linux-${OS_ARCH}-debian-12" \
     ) ; \
     for COMPONENT in "${COMPONENTS[@]}"; do \
       if [ ! -f "${COMPONENT}.tar.gz" ]; then \
