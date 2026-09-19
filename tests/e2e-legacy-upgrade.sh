@@ -4,7 +4,7 @@
 #
 # End-to-end regression test for upgrading a real, persisted WordPress install across this
 # fork's major-version jump (6.9.4, the last image built before this repo had its own
-# Dockerfile, to 7.0.0). Boots the actual image against real MariaDB and drives it through
+# Dockerfile, to the 7.x line). Boots the actual image against real MariaDB and drives it through
 # actual PHP execution (wp-cli's "core update-db"), since a real cross-major upgrade only
 # reproduces problems (broken migrations, permission issues, stale wp-config.php assumptions)
 # when WordPress's own code actually runs - not from reading the shell libraries in isolation.
@@ -127,8 +127,11 @@ wait_for_http_200 "$APP"
 echo "==> Verifying WordPress core actually reports the new version"
 new_version="$(docker exec "$APP" wp core version)"
 echo "    wp core version: $new_version"
-if [[ "$new_version" != 7.0 && "$new_version" != 7.0.* ]]; then
-    echo "FAIL: expected an upgraded 7.0.x core version, got '$new_version'"
+# Checks the major version only (not a specific minor/patch, which would go stale on every
+# ordinary WORDPRESS_VERSION bump) - the regression this test guards against is the 6.9.x -> 7.x
+# migration path itself, not any particular release within the 7.x line.
+if ! [[ "$new_version" =~ ^7\.[0-9]+(\.[0-9]+)?$ ]]; then
+    echo "FAIL: expected an upgraded 7.x core version, got '$new_version'"
     exit 1
 fi
 
