@@ -36,8 +36,7 @@ RUN --mount=type=secret,id=downloads_url,env=SECRET_DOWNLOADS_URL \
       "mysql-client-12.3.2-1-linux-${OS_ARCH}-debian-12" \
       "postgresql-lib-18.4.0-0-linux-${OS_ARCH}-debian-12" \
       "libphp-8.4.22-1-linux-${OS_ARCH}-debian-12" \
-      # NOTE: "wordpress-${WORDPRESS_VERSION}-0-linux-${OS_ARCH}-debian-12" intentionally omitted \
-      # here, see the TEMPORARY OVERRIDE block below. \
+      "wordpress-${WORDPRESS_VERSION}-0-linux-${OS_ARCH}-debian-12" \
     ) ; \
     for COMPONENT in "${COMPONENTS[@]}"; do \
       if [ ! -f "${COMPONENT}.tar.gz" ]; then \
@@ -48,22 +47,6 @@ RUN --mount=type=secret,id=downloads_url,env=SECRET_DOWNLOADS_URL \
       tar -zxf "${COMPONENT}.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner ; \
       rm -rf "${COMPONENT}.tar.gz" "${COMPONENT}.tar.gz.sha256" ; \
     done ;
-# TEMPORARY OVERRIDE: Bitnami has not published a "wordpress-${WORDPRESS_VERSION}" stacksmith
-# package yet (only up to 7.0.4 as of 2026-09-18), so fetch the WordPress core payload directly
-# from the official wordpress.org release instead. Unlike Moodle, WordPress core needs no
-# composer/vendor step - the release tarball's top-level "wordpress/" directory already matches
-# WORDPRESS_BASE_DIR, so it extracts straight into place. The Bitnami package also bundles
-# wp-cli alongside WordPress core (confirmed by inspecting the still-published 7.0.4 package:
-# files/wp-cli/bin/wp-cli.phar, version 2.12.0) - wordpress.org's tarball doesn't include it, so
-# fetch the same wp-cli version separately from its own GitHub release to match. Once Bitnami
-# publishes a real "wordpress-${WORDPRESS_VERSION}-0-..." package, delete this RUN step and
-# restore the COMPONENTS entry commented out above.
-RUN WORDPRESS_BUILD_CURL_OPTS=(--fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 5 -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36") ; \
-    curl "${WORDPRESS_BUILD_CURL_OPTS[@]}" "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz" -o /tmp/wordpress.tar.gz ; \
-    tar -zxf /tmp/wordpress.tar.gz -C /opt/bitnami ; \
-    rm -f /tmp/wordpress.tar.gz ; \
-    mkdir -p /opt/bitnami/wp-cli/bin ; \
-    curl "${WORDPRESS_BUILD_CURL_OPTS[@]}" "https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar" -o /opt/bitnami/wp-cli/bin/wp-cli.phar ;
 RUN apt-get update && apt-get upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
