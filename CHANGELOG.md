@@ -1,4 +1,21 @@
 
+## [7.1.3](https://github.com/CloudTooling/wordpress/compare/v7.1.2...v7.1.3) (2026-10-07)
+
+### Dependency Updates
+
+* **deps:** Update dependency chart-testing to v3.15.0 ([5553418](https://github.com/CloudTooling/wordpress/commit/55534187e2862e033c070780cb77d8545b9b9698))
+
+* **deps:** Update dependency wordpress/wordpress to v7.1.3 ([d9fff29](https://github.com/CloudTooling/wordpress/commit/d9fff29abcfba62fc6a8fde3da3b3b8f5ee16fa1))
+
+
+
+### Features
+
+* **Release:** Use generic docker-release workflow and pin chart to release image ([82e2321](https://github.com/CloudTooling/wordpress/commit/82e232146b22853ce726ab64a3bf3aada376695b))
+
+
+
+
 ## [7.1.2](https://github.com/CloudTooling/wordpress/compare/v7.1.1...v7.1.2) (2026-09-23)
 
 ### Dependency Updates
