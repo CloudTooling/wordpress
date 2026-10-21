@@ -1,4 +1,13 @@
 
+## [7.1.3.1](https://github.com/CloudTooling/wordpress/compare/v7.1.3...v7.1.3.1) (2026-10-21)
+
+### Dependency Updates
+
+* **deps:** Update PHP ([0391196](https://github.com/CloudTooling/wordpress/commit/0391196e7cffccbda5620fab05b0734de3666230))
+
+
+
+
 ## [7.1.3](https://github.com/CloudTooling/wordpress/compare/v7.1.2...v7.1.3) (2026-10-07)
 
 ### Dependency Updates
